@@ -1,6 +1,6 @@
-import './style.css'
-import {GameManager} from "./game.manager";
+import './style.css';
+import { GameManager } from './game.manager';
 
-const manager = new GameManager();
-manager.initGame();
+new GameManager('puzzle.jigsaw');
+
 
