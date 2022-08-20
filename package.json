@@ -17,6 +17,7 @@
     "vitest": "^0.22.1"
   },
   "dependencies": {
-    "@PauldeKoning/sudoku": "npm:@pauldekoning/sudoku@^1.0.14"
+    "@PauldeKoning/sudoku": "npm:@pauldekoning/sudoku@^1.0.14",
+    "tsyringe": "^4.7.0"
   }
 }

@@ -1,8 +1,9 @@
 import Puzzle from '@PauldeKoning/sudoku/dist/model/puzzle.interface';
 import { CellState } from '@PauldeKoning/sudoku/dist/model/cell.state.enum';
+import { DisplayState } from './game.manager';
 
 export class Renderer {
-  static drawPuzzle(puzzle: Puzzle) {
+  static drawPuzzle(puzzle: Puzzle, displayState: DisplayState) {
     const [xBound, yBound] = puzzle.getBounds();
 
     let sudokuRows = '';
@@ -15,13 +16,12 @@ export class Renderer {
           sudokuRows += `<td></td>`;
         } else {
           const cellValue = cell.value;
-          const draftValues = Array.from(cell.draftValues).sort((a, b) => a - b);
-          const draftString = draftValues.reduce((prev, curr) => prev + curr, '');
+          const draftValues = Array.from(cell.draftValues).sort((a, b) => a - b).join('');
           const bgColor = this.getSeededColor(cell.boxNr);
 
           sudokuRows += `<td class='puzzleCell' data-x='${j}' data-y='${i}' style='background-color: ${'#' + bgColor}'>
                               <div class='content'>
-                                  <sup>${draftString}</sup>
+                                  ${displayState === DisplayState.ALL && cellValue === 0 ? `<sup>${draftValues}</sup>` : ''}
                                   <span>${cellValue === 0 ? '' : cellValue}</span>
                               </div>
                           </td>`;
@@ -39,7 +39,7 @@ export class Renderer {
         `;
   }
 
-  static drawControls(cellState: CellState, selectedNumber: number) {
+  static drawControls(currentPuzzleName: string, availablePuzzles: string[], cellState: CellState, displayState: DisplayState, selectedNumber: number) {
     const controlDiv = document.querySelector<HTMLDivElement>('#controls')!;
     let numberBtns = '';
     for (let i = 1; i < 10; i++) {
@@ -47,12 +47,19 @@ export class Renderer {
     }
 
     controlDiv.innerHTML = `
+            <div id='selectRow'>
+                <select id='puzzleSelector'>
+                  ${availablePuzzles.map((puzzleName) => `<option ${currentPuzzleName === puzzleName ? 'selected' : ''}>${puzzleName}</option>`).join('')}
+                </select>
+            </div>
             <div id='stateRow'>
+                <button id='solvePuzzle'>Solve puzzle</button>
+                <input type='checkbox' name='displayMode' ${displayState === DisplayState.ALL ? 'checked' : ''} id='displayMode'><label for='displayMode'>Show draft</label>
                 <input type='checkbox' name='draftMode' ${cellState === CellState.DRAFT ? 'checked' : ''} id='draftMode'><label for='draftMode'>Draft mode</label>
             </div>
             <div id='numberRow'>
                 ${numberBtns}
-          </div>
+            </div>
         `;
 
     document.querySelector<HTMLDivElement>('body')!.appendChild(controlDiv);
