@@ -45,7 +45,7 @@ export class GameManager {
   }
 
   private renderControls() {
-    Renderer.drawControls(this.puzzleName, Object.keys(PuzzleStrings), this.cellState, this.displayState, this.selectedNumber);
+    Renderer.drawControls(this.puzzleName, Object.keys(PuzzleStrings), this.cellState, this.displayState, this.puzzle.getNumRange(), this.selectedNumber);
     this.addControlListeners();
   }
 
@@ -63,7 +63,7 @@ export class GameManager {
 
   private checkGameFinished() {
     if (this.invalidCells.length === 0) {
-      alert("Game finished");
+      alert('Game finished');
     }
   }
 
@@ -74,8 +74,18 @@ export class GameManager {
   }
 
   private solvePuzzle() {
-    this.puzzle.solve();
-    this.validatePuzzle();
+    Renderer.setLoadingState(true);
+
+    // Make use of the JavaScript event loop.
+    // By delaying it by a cycle the browser can render the new loading state before waiting on the long computation.
+    setTimeout(() => {
+      if (this.puzzle.solve()) {
+        this.validatePuzzle();
+      } else {
+        alert('Puzzle unsolvable in current state!')
+      }
+      Renderer.setLoadingState(false);
+    }, 10);
   }
 
   private addPuzzleListeners() {
@@ -153,7 +163,7 @@ export class GameManager {
     if (!solveBtn) throw Error('Missing solve button');
 
     solveBtn.addEventListener('click', () => {
-      const confirmation = confirm('Do you really want to automatically solve this puzzle?');
+      const confirmation = confirm('Do you really want to automatically solve this puzzle? \n\nThis might take a while depending on the puzzle type!');
 
       if (confirmation) this.solvePuzzle();
     });

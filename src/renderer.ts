@@ -24,7 +24,7 @@ export class Renderer {
           sudokuRows += `<td class='puzzleCell' data-x='${j}' data-y='${i}' style='background-color: ${'#' + bgColor}'>
                               <div class='content'>
                                   ${displayState === DisplayState.ALL && cellValue === 0 ? `<sup>${draftValues}</sup>` : ''}
-                                  <span ${invalidCells.includes(cell) ? 'class="invalid"': ''}>${cellValue === 0 ? '' : cellValue}</span>
+                                  <span ${invalidCells.includes(cell) ? 'class="invalid"' : ''}>${cellValue === 0 ? '' : cellValue}</span>
                               </div>
                           </td>`;
         }
@@ -41,10 +41,10 @@ export class Renderer {
         `;
   }
 
-  static drawControls(currentPuzzleName: string, availablePuzzles: string[], cellState: CellState, displayState: DisplayState, selectedNumber: number) {
+  static drawControls(currentPuzzleName: string, availablePuzzles: string[], cellState: CellState, displayState: DisplayState, numberRange: number, selectedNumber: number) {
     const controlDiv = document.querySelector<HTMLDivElement>('#controls')!;
     let numberBtns = '';
-    for (let i = 1; i < 10; i++) {
+    for (let i = 1; i < numberRange + 1; i++) {
       numberBtns += `<button ${i === selectedNumber ? 'class=\'active\'' : ''}>${i}</button>`;
     }
 
@@ -65,6 +65,17 @@ export class Renderer {
         `;
 
     document.querySelector<HTMLDivElement>('body')!.appendChild(controlDiv);
+  }
+
+  static setLoadingState(isLoading: boolean) {
+    const loadingOverlay = document.querySelector('#loadingOverlay') as HTMLDivElement;
+    if (!loadingOverlay) throw Error('Missing loading overlay');
+
+    if (isLoading) {
+      loadingOverlay.classList.add('show');
+    } else {
+      loadingOverlay.classList.remove('show');
+    }
   }
 
   static getSeededColor(seed: number): string {
