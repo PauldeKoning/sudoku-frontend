@@ -27,7 +27,7 @@ a:hover {
 }
 
 body {
-    margin: 0;
+    margin: 0 0 10rem;
     display: flex;
     place-items: center;
     min-width: 320px;
@@ -47,12 +47,15 @@ h1 {
 }
 
 #controls {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    gap: 0.5rem;
     position: fixed;
     bottom: 1rem;
     right: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    background: rgb(45, 45, 45, 0.75);
+    border-radius: 0.5rem;
 }
 
 #controls #numberRow {
@@ -132,6 +135,10 @@ button.active {
     border: 1px solid white;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
+}
+
+.puzzleCell .invalid {
+    color: red;
 }
 
 .puzzleCell .content {

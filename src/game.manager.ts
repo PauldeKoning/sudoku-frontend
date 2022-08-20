@@ -3,6 +3,7 @@ import { Renderer } from './renderer';
 import Puzzle from '@PauldeKoning/sudoku/dist/model/puzzle.interface';
 import { CellState } from '@PauldeKoning/sudoku/dist/model/cell.state.enum';
 import { PuzzleStrings } from '@PauldeKoning/sudoku/dist/puzzles/puzzle.strings';
+import Cell from '@PauldeKoning/sudoku/dist/model/cell';
 
 export enum DisplayState {
   ALL,
@@ -15,6 +16,7 @@ export class GameManager {
   private displayState = DisplayState.ALL;
   private cellState = CellState.DRAFT;
   private selectedNumber = 1;
+  private invalidCells: Cell[] = [];
 
   constructor(type: string) {
     this.puzzle = PuzzleCreator.setupPuzzle(type);
@@ -38,7 +40,7 @@ export class GameManager {
   }
 
   private renderPuzzle() {
-    Renderer.drawPuzzle(this.puzzle, this.displayState);
+    Renderer.drawPuzzle(this.puzzle, this.displayState, this.invalidCells);
     this.addPuzzleListeners();
   }
 
@@ -56,13 +58,24 @@ export class GameManager {
 
   private insertNumber(x: number, y: number) {
     this.puzzle.getPuzzle().setCell(x, y, this.selectedNumber);
-    // TODO: Call .validate() on the puzzle
+    this.validatePuzzle();
+  }
+
+  private checkGameFinished() {
+    if (this.invalidCells.length === 0) {
+      alert("Game finished");
+    }
+  }
+
+  private validatePuzzle() {
+    this.invalidCells = this.puzzle.getPuzzle().validate();
     this.renderPuzzle();
+    this.checkGameFinished();
   }
 
   private solvePuzzle() {
-    console.log('Solving puzzle...');
-    // this.puzzle.getPuzzle().solve();
+    this.puzzle.solve();
+    this.validatePuzzle();
   }
 
   private addPuzzleListeners() {
@@ -96,6 +109,7 @@ export class GameManager {
 
     this.puzzle = PuzzleCreator.setupPuzzle(type);
     this.puzzleName = type;
+    this.puzzle.getPuzzle().changeCellState(this.cellState);
     this.renderGame();
   }
 

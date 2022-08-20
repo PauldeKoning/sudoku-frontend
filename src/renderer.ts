@@ -1,9 +1,10 @@
 import Puzzle from '@PauldeKoning/sudoku/dist/model/puzzle.interface';
 import { CellState } from '@PauldeKoning/sudoku/dist/model/cell.state.enum';
 import { DisplayState } from './game.manager';
+import Cell from '@PauldeKoning/sudoku/dist/model/cell';
 
 export class Renderer {
-  static drawPuzzle(puzzle: Puzzle, displayState: DisplayState) {
+  static drawPuzzle(puzzle: Puzzle, displayState: DisplayState, invalidCells: Cell[]) {
     const [xBound, yBound] = puzzle.getBounds();
 
     let sudokuRows = '';
@@ -19,10 +20,11 @@ export class Renderer {
           const draftValues = Array.from(cell.draftValues).sort((a, b) => a - b).join('');
           const bgColor = this.getSeededColor(cell.boxNr);
 
+
           sudokuRows += `<td class='puzzleCell' data-x='${j}' data-y='${i}' style='background-color: ${'#' + bgColor}'>
                               <div class='content'>
                                   ${displayState === DisplayState.ALL && cellValue === 0 ? `<sup>${draftValues}</sup>` : ''}
-                                  <span>${cellValue === 0 ? '' : cellValue}</span>
+                                  <span ${invalidCells.includes(cell) ? 'class="invalid"': ''}>${cellValue === 0 ? '' : cellValue}</span>
                               </div>
                           </td>`;
         }
