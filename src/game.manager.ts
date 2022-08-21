@@ -1,6 +1,6 @@
 import { PuzzleCreator } from './puzzle.creator';
 import { Renderer } from './renderer';
-import Puzzle from '@PauldeKoning/sudoku/dist/model/puzzle.interface';
+import Puzzle from '@PauldeKoning/sudoku/dist/model/puzzle.abstract';
 import { CellState } from '@PauldeKoning/sudoku/dist/model/cell.state.enum';
 import { PuzzleStrings } from '@PauldeKoning/sudoku/dist/puzzles/puzzle.strings';
 import Cell from '@PauldeKoning/sudoku/dist/model/cell';
@@ -26,12 +26,10 @@ export class GameManager {
   public setCellState(isDraft: boolean) {
     this.cellState = isDraft ? CellState.DRAFT : CellState.DEFINITIVE;
     this.puzzle.getPuzzle().changeCellState(this.cellState);
-    this.renderControls();
   }
 
   public setDisplayState(showDraft: boolean) {
     this.displayState = showDraft ? DisplayState.ALL : DisplayState.DEFINITIVE;
-    this.renderGame();
   }
 
   public renderGame() {
@@ -53,7 +51,6 @@ export class GameManager {
     if (n < 0 || n > 9) throw Error('Invalid number to insert');
 
     this.selectedNumber = n;
-    this.renderControls();
   }
 
   private insertNumber(x: number, y: number) {
@@ -82,7 +79,7 @@ export class GameManager {
       if (this.puzzle.solve()) {
         this.validatePuzzle();
       } else {
-        alert('Puzzle unsolvable in current state!')
+        alert('Puzzle unsolvable in current state!');
       }
       Renderer.setLoadingState(false);
     }, 10);
@@ -120,7 +117,6 @@ export class GameManager {
     this.puzzle = PuzzleCreator.setupPuzzle(type);
     this.puzzleName = type;
     this.puzzle.getPuzzle().changeCellState(this.cellState);
-    this.renderGame();
   }
 
   private addPuzzleSelectorListener() {
@@ -137,6 +133,7 @@ export class GameManager {
       }
 
       this.selectNewPuzzle(type);
+      this.renderGame();
     });
   }
 
@@ -146,6 +143,7 @@ export class GameManager {
 
     displayModeCheckbox.addEventListener('change', () => {
       this.setDisplayState(displayModeCheckbox.checked);
+      this.renderGame();
     });
   }
 
@@ -155,6 +153,7 @@ export class GameManager {
 
     draftModeCheckbox.addEventListener('change', () => {
       this.setCellState(draftModeCheckbox.checked);
+      this.renderControls();
     });
   }
 
@@ -178,6 +177,7 @@ export class GameManager {
       const selectedNumber = Number(target.innerText);
 
       this.setSelectedNumber(selectedNumber);
+      this.renderControls();
     });
   }
 }

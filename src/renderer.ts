@@ -1,4 +1,4 @@
-import Puzzle from '@PauldeKoning/sudoku/dist/model/puzzle.interface';
+import Puzzle from '@PauldeKoning/sudoku/dist/model/puzzle.abstract';
 import { CellState } from '@PauldeKoning/sudoku/dist/model/cell.state.enum';
 import { DisplayState } from './game.manager';
 import Cell from '@PauldeKoning/sudoku/dist/model/cell';

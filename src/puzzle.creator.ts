@@ -1,8 +1,8 @@
 import PuzzleFactory from '@PauldeKoning/sudoku/dist/model/puzzle.factory';
-import Puzzle from '@PauldeKoning/sudoku/dist/model/puzzle.interface';
+import Puzzle from '@PauldeKoning/sudoku/dist/model/puzzle.abstract';
 
 export class PuzzleCreator {
   static setupPuzzle(type: string): Puzzle {
-    return new PuzzleFactory().createPuzzle(type);
+    return PuzzleFactory.getFactory().createPuzzle(type);
   }
 }
