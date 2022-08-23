@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest --coverage"
+    "test": "vitest"
   },
   "devDependencies": {
     "@vitest/coverage-c8": "^0.22.1",
@@ -17,7 +17,6 @@
     "vitest": "^0.22.1"
   },
   "dependencies": {
-    "@PauldeKoning/sudoku": "npm:@pauldekoning/sudoku@^2.0.0",
-    "tsyringe": "^4.7.0"
+    "@PauldeKoning/sudoku": "npm:@pauldekoning/sudoku@^2.0.0"
   }
 }
